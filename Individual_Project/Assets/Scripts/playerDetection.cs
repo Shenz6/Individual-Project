@@ -2,37 +2,37 @@
 using System.Collections;
 
 public class playerDetection : MonoBehaviour {
-/*
+
 	public float fieldOfViewAngle = 110f;
 	public bool playerInSight;
 	public Vector3 personalLastSighting;
 
 	private NavMeshAgent nav;
 	private SphereCollider col;
-	private Animator anim;
-	private LastPlayerSighting lastPlayerSighting;
+
+	//private LastPlayerSighting lastPlayerSighting;
 	private GameObject player;
-	private Animator playerAnim;
-	private PlayerHealth playerHealth;
-	private HashIDs hash;
-	private Vector3 previousSighting;
+
+	//private PlayerHealth playerHealth;
+	//private HashIDs hash;
+	//private Vector3 previousSighting;
 
 	void Awake()
 	{
 		nav = GetComponent<NavMeshAgent> ();
 		col = GetComponent<SphereCollider> ();
-		anim = GetComponent<Animator> ();
-		lastPlayerSighting = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<lastPlayerSighting> ();
-		player = GameObject.FindGameObjectWithTag (Tags.player);
-		playerAnim = player.GetComponent<Animator> ();
-		playerHealth = player.GetComponent<playerHealth> ();
-		hash = GameObject.FindGameObjectWithTag (Tags.gameController).GetComponent<HashIDs> ();
+		//anim = GetComponent<Animator> ();
+		//lastPlayerSighting = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<lastPlayerSighting> ();
+		player = GameObject.FindGameObjectWithTag ("Player");
+		//playerAnim = player.GetComponent<Animator> ();
+		//playerHealth = player.GetComponent<playerHealth> ();
+		//hash = GameObject.FindGameObjectWithTag (Tags.gameController).GetComponent<HashIDs> ();
 
-		personalLastSighting = lastPlayerSighting.resetPosition;
-		previousSighting = lastPlayerSighting.resetPosition;
+		//personalLastSighting = lastPlayerSighting.resetPosition;
+		//previousSighting = lastPlayerSighting.resetPosition;
 
 	}
-*/
+
 	// Use this for initialization
 	void Start () {
 	
@@ -51,4 +51,43 @@ public class playerDetection : MonoBehaviour {
 			print (theDistance + " " + hit.collider.gameObject.name);
 		}
 	}
+
+	void OnTriggerStay (Collider other)
+	{
+		if (other.gameObject == player)
+		{
+			playerInSight = false;
+
+			Vector3 direction = other.transform.position - transform.position;
+			float angle = Vector3.Angle (direction, transform.forward);
+
+			if(angle < fieldOfViewAngle * 0.5f)
+			{
+				RaycastHit hit;
+
+				if(Physics.Raycast (transform.position + transform.up, direction.normalized, out hit, col.radius))
+				{
+					if(hit.collider.gameObject == player)
+					{
+						playerInSight = true;
+
+						//GO TO THE CHASE SCRIPT HERE
+					}
+				}
+			}
+
+		}
+
+	}
+	void onTriggerExit (Collider other)
+	{
+		if (other.gameObject == player) {
+			playerInSight = false;
+		}
+	}
+
+
+
+
+
 }

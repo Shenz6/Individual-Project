@@ -85,6 +85,33 @@ NavMeshSettings:
     cellSize: .100000001
     manualCellSize: 0
   m_NavMeshData: {fileID: 23800000, guid: aeb1d2c5ef13bf640a17af902406be84, type: 2}
+--- !u!1 &13078468
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 13078469}
+  m_Layer: 0
+  m_Name: Patrol point 2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &13078469
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 13078468}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 19.5, y: 0, z: 5.78999996}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
 --- !u!1 &163460642
 GameObject:
   m_ObjectHideFlags: 0
@@ -158,6 +185,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2080589554}
   m_RootOrder: 8
+--- !u!1 &380872766
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 380872767}
+  m_Layer: 0
+  m_Name: Patrol point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &380872767
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 380872766}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -.959999979, y: 0, z: 6.13000011}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
 --- !u!1 &477019877
 GameObject:
   m_ObjectHideFlags: 0
@@ -1339,6 +1393,7 @@ GameObject:
   - 195: {fileID: 1675772046}
   - 135: {fileID: 1675772048}
   - 136: {fileID: 1675772047}
+  - 114: {fileID: 1675772049}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -1428,6 +1483,7 @@ MonoBehaviour:
   fieldOfViewAngle: 110
   playerInSight: 0
   personalLastSighting: {x: 0, y: 0, z: 0}
+  myRender: {fileID: 1675772039}
 --- !u!114 &1675772044
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1439,9 +1495,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f05459bac65c1c34caf5c082df77c0cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fpsTargetDistance: 10
-  enemyLookDistance: 10
-  attackDistance: 5
+  fpsTargetDistance: 6
+  enemyLookDistance: 5
+  attackDistance: 4
   EnemyMovementSpeed: .0299999993
   damping: 5
   fpsTarget: {fileID: 1486227567}
@@ -1506,6 +1562,24 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 9
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1675772049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1675772037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac20cf38e3dbc3d4d8bd15478d174a7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  patrol1: {fileID: 380872766}
+  patrol2: {fileID: 13078468}
+  target: {x: 0, y: 0, z: 0}
+  playerPos: {x: 0, y: 0, z: 0}
+  moveSpeed: 2
+  rotationSpeed: 2
+  cooldownReset: 100
 --- !u!1 &1688828099
 GameObject:
   m_ObjectHideFlags: 0

@@ -24,22 +24,42 @@ public class playerFollow : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
+		/*
 		fpsTargetDistance = Vector3.Distance (fpsTarget.position,transform.position);
 
 		if (fpsTargetDistance < enemyLookDistance) {
 			myRender.material.color = Color.yellow;
 			lookAtPlayer();
-			print ("looking at player");
+			//print ("looking at player");
 		}
 		if (fpsTargetDistance < attackDistance) {
 			myRender.material.color = Color.red;
 			attackPlease();
-			print ("Attack");
+			//print ("Attack");
 
 		}
 		if(fpsTargetDistance > enemyLookDistance) {
 			myRender.material.color = Color.green;
+		}
+		*/
+	}
+
+	public void chasePlayer(){
+		fpsTargetDistance = Vector3.Distance (fpsTarget.position,transform.position);
+		
+		if (fpsTargetDistance < enemyLookDistance) {
+			//myRender.material.color = Color.yellow;
+			lookAtPlayer();
+			//print ("looking at player");
+		}
+		if (fpsTargetDistance < attackDistance) {
+			//myRender.material.color = Color.red;
+			attackPlease();
+			//print ("Attack");
+			
+		}
+		if(fpsTargetDistance > enemyLookDistance) {
+			//myRender.material.color = Color.green;
 		}
 	}
 

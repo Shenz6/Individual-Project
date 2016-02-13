@@ -2,6 +2,9 @@
 using System.Collections;
 
 public class Key : MonoBehaviour {
+
+    public AudioClip clip;
+
 	
 	void OnTriggerEnter(Collider collider)
 	{
@@ -10,6 +13,11 @@ public class Key : MonoBehaviour {
 			//keyCollected += 1;
 			Debug.Log ("Collision with key");
 			GameVariables.keyCount+=1;
+
+            //AudioSource audio = GetComponent<AudioSource>();
+            //audio.Play();
+            AudioSource.PlayClipAtPoint(clip, GameObject.FindWithTag("Player").transform.position);
+
 			Destroy(gameObject);
 
             Debug.Log(GameVariables.keyCount);

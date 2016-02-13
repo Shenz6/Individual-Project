@@ -22,6 +22,7 @@ public class playerDetection : MonoBehaviour {
 	private Patrol patrol;
 	private bool isOnPatrol = true;
 	private bool isGreen = true;
+ 
 
 	void Awake()
 	{
@@ -79,6 +80,7 @@ public class playerDetection : MonoBehaviour {
 
 		if (other.gameObject == player)
 		{
+           
 			playerInSight = false;
 			Debug.Log("player entered collider");
 			isGreen = false;
@@ -118,7 +120,15 @@ public class playerDetection : MonoBehaviour {
 		}
 
 	}
-	void onTriggerExit (Collider other)
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject == player)
+        {
+            patrol.lastKnownpPos = new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z);
+            patrol.waypoint = 3;
+        }
+    }
+	void OnTriggerExit (Collider other)
 	{
 		if (other.gameObject == player) {
 

@@ -13,14 +13,15 @@ public class Elevator : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (doorOpen == true) {
-			transform.Translate(new Vector3(0,2,0));
+			transform.Translate(new Vector3(0.0f,-0.5f,0.0f));
 		}
 	
 	}
 	//this is part of what to change for more keys
-	void onTriggerEnter(Collider collider)
+	void OnTriggerEnter(Collider collider)
 	{
-		if (collider.gameObject.tag == "player" && GameVariables.keyCount > 0) {
+		if (collider.gameObject.tag == "Player" && GameVariables.keyCount > 0) {
+            Debug.Log("collision with player");
 			GameVariables.keyCount-=1;
 			doorOpen = true;
 			//keyCollected += 1;

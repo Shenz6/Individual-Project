@@ -12,6 +12,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
     {
         [SerializeField] private bool m_IsWalking;
         [SerializeField] private float m_WalkSpeed;
+        [SerializeField]private float m_LookSpeed = 1.5f; // added
         [SerializeField] private float m_RunSpeed;
         [SerializeField] [Range(0f, 1f)] private float m_RunstepLenghten;
         [SerializeField] private float m_JumpSpeed;
@@ -199,7 +200,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         }
 
 
-        private void GetInput(out float speed)
+        private void GetInput(out float speed) //Edits made here
         {
             // Read input
             float horizontal = CrossPlatformInputManager.GetAxis("Horizontal");
@@ -232,9 +233,28 @@ namespace UnityStandardAssets.Characters.FirstPerson
         }
 
 
-        private void RotateView()
+        private void RotateView() //Edits Made here
         {
+#if !MOBILE_INPUT
             m_MouseLook.LookRotation (transform, m_Camera.transform);
+#else
+            Vector2 mouseInput = new Vector2 ( CrossPlatformInputManager.GetAxis("HorizontalLook"),
+                                               CrossPlatformInputManager.GetAxis("VerticalLook"));
+
+            float camX = m_Camera.transform.localEulerAngles.x;
+
+            if ((camX > 280 && camX <= 360) || (camX >= 0 && camX < 80) || (camX >= 80 && camX < 180 && mouseInput.y > 0) || (camX > 180 && camX <= 280 && mouseInput.y < 0)) 
+            {
+                m_Camera.transform.localEulerAngles += new Vector3(-mouseInput.y * m_LookSpeed, m_Camera.transform.localEulerAngles.y, m_Camera.transform.localEulerAngles.z);
+            }
+
+            
+
+            m_YRotation = mouseInput.y;
+            transform.localEulerAngles += new Vector3(0, mouseInput.x * m_LookSpeed, 0);
+#endif
+          
+            
         }
 
 

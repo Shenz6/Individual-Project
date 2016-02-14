@@ -4,6 +4,7 @@ using System.Collections;
 public class Elevator : MonoBehaviour {
 
 	private bool doorOpen = false;
+    public AudioClip clip;
 
 	// Use this for initialization
 	void Start () {
@@ -23,6 +24,7 @@ public class Elevator : MonoBehaviour {
 		if (collider.gameObject.tag == "Player" && GameVariables.keyCount > 0) {
             Debug.Log("collision with player");
 			GameVariables.keyCount-=1;
+            AudioSource.PlayClipAtPoint(clip, GameObject.FindWithTag("Player").transform.position);
 			doorOpen = true;
 			//keyCollected += 1;
 			//GameVariables.keyCount+=1;

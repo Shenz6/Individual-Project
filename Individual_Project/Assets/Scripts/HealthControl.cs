@@ -90,6 +90,7 @@ public class HealthControl : MonoBehaviour {
 
     public void Restart() {
         Application.LoadLevel(Application.loadedLevel);
+        //to ensure the lighting does not 'brake' during reload go to window > lighting > lightmaps, and manually bake the lightmap.
     }
 
     public void QuitGame() {

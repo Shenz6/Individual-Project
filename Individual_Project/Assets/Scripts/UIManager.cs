@@ -79,4 +79,16 @@ public class UIManager : MonoBehaviour {
         }
     }
 
+	public void Save() {
+		PlayerPrefs.SetInt ("save", Application.loadedLevel);
+	}
+
+	public void Load() {
+		Application.LoadLevel (PlayerPrefs.GetInt ("save"));
+	}
+
+	public void Quit() {
+		Application.LoadLevel ("MainMenu");
+	}
+
 }

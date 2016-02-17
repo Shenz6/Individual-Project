@@ -18,13 +18,19 @@ public class Patrol : MonoBehaviour {
 	private float cooldown = 100f;
 	public float cooldownReset = 100f;
 
+
+
 	// Use this for initialization
 	void Start () {
         player = GameObject.FindGameObjectWithTag("Player");
+
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
+
+
 
 		/*
 
@@ -73,6 +79,9 @@ public class Patrol : MonoBehaviour {
 	*/
 	
 	}
+
+
+
 
 
 	public void patrolling(){

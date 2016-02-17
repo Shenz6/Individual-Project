@@ -9,6 +9,7 @@ public class playerFollow : MonoBehaviour {
 	public float EnemyMovementSpeed;
 	public float damping = 1;
 	public Transform fpsTarget;
+	private NavMeshAgent agent;
 
 	Rigidbody theRigidBody;
 	public Renderer myRender;
@@ -19,6 +20,7 @@ public class playerFollow : MonoBehaviour {
 
 		myRender.GetComponent<Renderer> ();
 		theRigidBody = GetComponent<Rigidbody>();
+		agent = GetComponent<NavMeshAgent>();
 	
 	}
 	

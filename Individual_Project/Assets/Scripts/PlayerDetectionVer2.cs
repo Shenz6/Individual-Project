@@ -10,7 +10,14 @@ public class PlayerDetectionVer2 : MonoBehaviour {
 	private GameObject player;
 	private GameObject enemy;
 
+	public float FOVRange; // range of the cone 68
+	public float rayRange; // distance enemy can see in front
+	private Vector3 rayDirection;
+	private Transform lastKnownPos; // last known position of the player
+
 	private bool playerHidden;
+	private bool playerInSight;
+	private bool alert;
 
 
 	// Use this for initialization
@@ -23,45 +30,56 @@ public class PlayerDetectionVer2 : MonoBehaviour {
 
 		agent = GetComponent<NavMeshAgent>();
 
-		playerHidden = true;
+
+		PlayerHidden ();
+		PlayerOutOfSight ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-
-		// Bit shift the index of the layer (8) to get a bit mask
-		int layerMask = 1 << 8;
-
-		// This would cast rays only against colliders in layer 8.
-		// But instead we want to collide against everything except layer 8. The ~ operator does this, it inverts a bitmask.
-		layerMask = ~layerMask;
-		/*
-		RaycastHit hit;
-		// Does the ray intersect any objects excluding the player layer
-		if (Physics.Raycast(transform.position, transform.TransformDirection (Vector3.forward), out hit, Mathf.Infinity, layerMask)) {
-			Debug.DrawRay(transform.position, transform.TransformDirection (Vector3.forward) * hit.distance, Color.yellow);
-			Debug.Log("Did Hit");
-		} else {
-			Debug.DrawRay(transform.position, transform.TransformDirection (Vector3.forward) *1000, Color.white);
-			Debug.Log("Did not Hit");
+		//Change status if player can be see
+		if (playerHidden == false && playerInSight == true){
+			patrol.StopPatrolling ();
 		}
-		*/
 
+
+		//Below determines whether the enemy can see the player
 		RaycastHit hit;
 
-		//I want this to satisfy a boolean that can tell that yes the player is in sight of the enemy
+		//I want this to satisfy a boolean that can tell that yes the player is hidden behind an object and can't be seen by the enemy even if within vision cone
 		if (Physics.Linecast (enemy.transform.position, player.transform.position, out hit)) {
 			if (player.GetComponent<Collider> () == hit.collider) {
-				Debug.DrawLine (enemy.transform.position, player.transform.position, Color.green);
-				Debug.Log ("Nothing Between player and Enemy");
-				playerHidden = false;
+				//Debug.DrawLine (enemy.transform.position, player.transform.position, Color.green);
+				//Debug.Log ("Nothing Between player and Enemy");
+				PlayerUnHidden();
 			} else {
-				Debug.DrawLine (enemy.transform.position, player.transform.position, Color.red);
-				playerHidden = true;
+				//Debug.DrawLine (enemy.transform.position, player.transform.position, Color.red);
+				PlayerHidden();
 			}
-		} 
+		}
+
+		//Vision cone
+		Vector3 rayDirection = player.transform.position - transform.position; // Determine the angle between player and enemy.
+		//Debug.Log(Vector3.Angle (rayDirection, transform.forward));
+		if ((Vector3.Angle (rayDirection, transform.forward)) <= FOVRange * 0.5f) {
+			Debug.Log ("Whithin cone");
+			// Detect if player is within the field of view
+			if (Physics.Raycast (transform.position, rayDirection, out hit, rayRange)) {
+				if (hit.transform.tag == "Player") {
+					PlayerInSight ();
+					lastKnownPos.position = hit.transform.position;
+					Debug.Log ("Player in sight");
+					Debug.DrawRay (transform.position, rayDirection, Color.cyan, rayRange);
+				}
+			}
+		} else {
+			PlayerOutOfSight ();
+			Debug.DrawRay (transform.position, rayDirection, Color.yellow, rayRange);
+			Debug.Log ("Player not in sight");
+		}
 
 	}
+
 
 	//Checking the surrounding area for the player because robots might have eyes in the back of their heads..... probably not
 	void OnTriggerEnter(Collider other)
@@ -71,5 +89,33 @@ public class PlayerDetectionVer2 : MonoBehaviour {
 			//patrol.lastKnownpPos = new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z);
 			//patrol.waypoint = 3;
 		}
+	}
+	public void Investigate(){
+		transform.LookAt (lastKnownPos);
+	}
+	public void Chase(){
+		
+	}
+
+	IEnumerator HoldIt(){
+		print(Time.time);
+		yield return new WaitForSeconds(5);
+		print(Time.time);
+	}
+
+	public void PlayerInSight(){
+		playerInSight = true;
+	}
+
+	public void PlayerOutOfSight(){
+		playerInSight = false;
+	}
+
+	public void PlayerUnHidden(){
+		playerHidden = false;
+	}
+
+	public void PlayerHidden(){
+		playerHidden = true;
 	}
 }

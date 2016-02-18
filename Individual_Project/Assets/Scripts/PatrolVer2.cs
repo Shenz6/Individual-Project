@@ -18,7 +18,7 @@ public class PatrolVer2 : MonoBehaviour {
 		//Nav Mesh patrol set up
 		agent = GetComponent<NavMeshAgent>();
 
-		isPatrolling = true;
+		StartPatrolling ();
 
 		GotoNextPoint();
 	}

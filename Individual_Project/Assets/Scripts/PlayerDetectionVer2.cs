@@ -12,6 +12,7 @@ public class PlayerDetectionVer2 : MonoBehaviour {
 
 	public float FOVRange; // range of the cone 68
 	public float rayRange; // distance enemy can see in front
+	private float hitCount; // amound of time raycast hits player
 	private Vector3 rayDirection;
 	private Transform lastKnownPos; // last known position of the player
 
@@ -27,9 +28,10 @@ public class PlayerDetectionVer2 : MonoBehaviour {
 		enemy = this.gameObject;
 
 		player = GameObject.FindGameObjectWithTag ("Player");
-
+		patrol = gameObject.GetComponent<PatrolVer2> ();
 		agent = GetComponent<NavMeshAgent>();
 
+		hitCount = 0;
 
 		PlayerHidden ();
 		PlayerOutOfSight ();
@@ -62,13 +64,15 @@ public class PlayerDetectionVer2 : MonoBehaviour {
 		Vector3 rayDirection = player.transform.position - transform.position; // Determine the angle between player and enemy.
 		//Debug.Log(Vector3.Angle (rayDirection, transform.forward));
 		if ((Vector3.Angle (rayDirection, transform.forward)) <= FOVRange * 0.5f) {
-			Debug.Log ("Whithin cone");
+			//Debug.Log ("Whithin cone");
 			// Detect if player is within the field of view
 			if (Physics.Raycast (transform.position, rayDirection, out hit, rayRange)) {
 				if (hit.transform.tag == "Player") {
 					PlayerInSight ();
-					lastKnownPos.position = hit.transform.position;
+					lastKnownPos.transform.position = hit.transform.position;
+					hitCount += 1;
 					Debug.Log ("Player in sight");
+					Debug.Log (hitCount);
 					Debug.DrawRay (transform.position, rayDirection, Color.cyan, rayRange);
 				}
 			}
@@ -92,6 +96,7 @@ public class PlayerDetectionVer2 : MonoBehaviour {
 	}
 	public void Investigate(){
 		transform.LookAt (lastKnownPos);
+		StartCoroutine (HoldIt ());
 	}
 	public void Chase(){
 		

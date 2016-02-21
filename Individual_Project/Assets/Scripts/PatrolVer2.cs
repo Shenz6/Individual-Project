@@ -52,5 +52,6 @@ public class PatrolVer2 : MonoBehaviour {
 	public void StopPatrolling()
 	{
 		isPatrolling = false;
+		agent.Stop ();
 	}
 }

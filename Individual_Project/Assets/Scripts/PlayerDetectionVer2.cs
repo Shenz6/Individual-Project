@@ -9,12 +9,17 @@ public class PlayerDetectionVer2 : MonoBehaviour {
 	private NavMeshAgent agent;
 	private GameObject player;
 	private GameObject enemy;
+	public Renderer myRender;
 
 	public float FOVRange; // range of the cone 68
 	public float rayRange; // distance enemy can see in front
 	private float hitCount; // amound of time raycast hits player
+	public float timeToChase = 5; // how long before an enemy starts chasing the player
+	public int alertDelay = 1; // how long the enemy waits before checking out a spot where the player was
+	public int returnToPatrolTime = 1; // how long before the enemy returns to patrolling;
 	private Vector3 rayDirection;
-	private Transform lastKnownPos; // last known position of the player
+	public GameObject lastKnownPos; // last known position of the player
+	private float setChaseTime;
 
 	private bool playerHidden;
 	private bool playerInSight;
@@ -30,6 +35,10 @@ public class PlayerDetectionVer2 : MonoBehaviour {
 		player = GameObject.FindGameObjectWithTag ("Player");
 		patrol = gameObject.GetComponent<PatrolVer2> ();
 		agent = GetComponent<NavMeshAgent>();
+		myRender = GetComponent<Renderer>();
+		myRender.material.color = Color.green;
+
+		setChaseTime = timeToChase;
 
 		hitCount = 0;
 
@@ -40,8 +49,12 @@ public class PlayerDetectionVer2 : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		//Change status if player can be see
+		//Debug.Log(timeToChase);
 		if (playerHidden == false && playerInSight == true){
 			patrol.StopPatrolling ();
+			//Investigate ();
+			StartCoroutine(Alert());
+
 		}
 
 
@@ -69,17 +82,22 @@ public class PlayerDetectionVer2 : MonoBehaviour {
 			if (Physics.Raycast (transform.position, rayDirection, out hit, rayRange)) {
 				if (hit.transform.tag == "Player") {
 					PlayerInSight ();
-					lastKnownPos.transform.position = hit.transform.position;
+					lastKnownPos.transform.position = player.transform.position;
 					hitCount += 1;
-					Debug.Log ("Player in sight");
-					Debug.Log (hitCount);
+					//Debug.Log ("Player in sight");
+					//Debug.Log (hitCount);
 					Debug.DrawRay (transform.position, rayDirection, Color.cyan, rayRange);
 				}
 			}
 		} else {
 			PlayerOutOfSight ();
-			Debug.DrawRay (transform.position, rayDirection, Color.yellow, rayRange);
-			Debug.Log ("Player not in sight");
+			//Debug.DrawRay (transform.position, rayDirection, Color.yellow, rayRange);
+			//Debug.Log ("Player not in sight");
+			if(hitCount > 0 ){
+				hitCount -= 1;
+				//Debug.Log ("hitCount");
+			}
+
 		}
 
 	}
@@ -94,18 +112,45 @@ public class PlayerDetectionVer2 : MonoBehaviour {
 			//patrol.waypoint = 3;
 		}
 	}
-	public void Investigate(){
-		transform.LookAt (lastKnownPos);
-		StartCoroutine (HoldIt ());
-	}
+
 	public void Chase(){
-		
+		myRender.material.color = Color.clear;
+		myRender.material.color = Color.red;
+		if (playerHidden == false && playerInSight == true){
+			Follow ();
+		}
+
 	}
 
-	IEnumerator HoldIt(){
-		print(Time.time);
-		yield return new WaitForSeconds(5);
-		print(Time.time);
+	public void Follow(){
+		agent.Resume ();
+		agent.destination = player.transform.position;
+	}
+
+
+	IEnumerator Alert(){
+		myRender.material.color = Color.clear;
+		myRender.material.color = Color.yellow;
+		yield return new WaitForSeconds(alertDelay);
+		//agent.speed -= 2;
+		if (playerHidden == false && playerInSight == true) {
+			Chase ();
+			Debug.Log ("Starting Chase");
+		} else if (playerHidden == true || playerInSight == false) {
+			agent.Resume ();
+			agent.destination = lastKnownPos.transform.position;
+		} else {
+			StartCoroutine (ReturnToPatrol ());
+			Debug.Log ("Returning to patrol");
+		}
+	}
+
+	IEnumerator ReturnToPatrol(){
+		//agent.speed += 2;
+		yield return new WaitForSeconds (returnToPatrolTime);
+		myRender.material.color = Color.clear;
+		myRender.material.color = Color.green;
+		patrol.StartPatrolling();
 	}
 
 	public void PlayerInSight(){

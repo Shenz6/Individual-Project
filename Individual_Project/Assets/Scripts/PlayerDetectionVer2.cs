@@ -116,8 +116,10 @@ public class PlayerDetectionVer2 : MonoBehaviour {
 	public void Chase(){
 		myRender.material.color = Color.clear;
 		myRender.material.color = Color.red;
-		if (playerHidden == false && playerInSight == true){
+		if (playerHidden == false && playerInSight == true) {
 			Follow ();
+		} else {
+			StartCoroutine (ReturnToPatrol ());
 		}
 
 	}
@@ -125,6 +127,9 @@ public class PlayerDetectionVer2 : MonoBehaviour {
 	public void Follow(){
 		agent.Resume ();
 		agent.destination = player.transform.position;
+		if (playerHidden == true || playerInSight == false) {
+			StartCoroutine (ReturnToPatrol ());
+		}
 	}
 
 
@@ -134,22 +139,36 @@ public class PlayerDetectionVer2 : MonoBehaviour {
 		yield return new WaitForSeconds(alertDelay);
 		//agent.speed -= 2;
 		if (playerHidden == false && playerInSight == true) {
-			Chase ();
+			Follow ();
 			Debug.Log ("Starting Chase");
 		} else if (playerHidden == true || playerInSight == false) {
 			agent.Resume ();
 			agent.destination = lastKnownPos.transform.position;
+			StartCoroutine (ReturnToPatrol ());
+		} else {
+			StartCoroutine (ReturnToPatrol ());
+			Debug.Log ("Returning to patrol");
+		}
+		if (playerHidden == true || playerInSight == false) {
+			agent.Resume ();
+			agent.destination = lastKnownPos.transform.position;
+			StartCoroutine (ReturnToPatrol ());
 		} else {
 			StartCoroutine (ReturnToPatrol ());
 			Debug.Log ("Returning to patrol");
 		}
 	}
 
+
 	IEnumerator ReturnToPatrol(){
 		//agent.speed += 2;
 		yield return new WaitForSeconds (returnToPatrolTime);
 		myRender.material.color = Color.clear;
 		myRender.material.color = Color.green;
+		agent.Resume ();
+		patrol.StartPatrolling();
+	}
+	void RTpatrol(){
 		patrol.StartPatrolling();
 	}
 

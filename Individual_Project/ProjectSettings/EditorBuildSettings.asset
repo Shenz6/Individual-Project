@@ -10,4 +10,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Test plane.unity
   - enabled: 1
+    path: Assets/Scenes/SceneTwo.unity
+  - enabled: 1
     path: Assets/Scenes/blankScene.unity
